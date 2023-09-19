@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
-	import { writable } from 'svelte/store';
-	import { fade, fly } from 'svelte/transition';
+	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
 
 	const navbarLinks: string[] = ['about', 'login'];
 	const phrases: string[] = ['ideas.', 'community.', 'us.'];
@@ -86,6 +85,7 @@
 	.navbar {
 		position: fixed;
 		height: 20%;
+        width: 100vw;
 		z-index: 2;
 	}
 	.navbar > ul {
@@ -208,7 +208,8 @@
 
 	.description {
 		position: relative;
-		padding: 10vh 5vw 10vh 5vw;
+        padding-top: calc(max(10vh,100px));
+        width: 80vw;
 	}
 
 	/* Extra small device media query */
@@ -278,10 +279,6 @@
 			font-size: 1.5rem;
 		}
 
-		.description {
-			width: 40%;
-		}
-
         .nav-link {
             font-size: 25px;
             margin: 0 20px 0 20px;
@@ -307,6 +304,9 @@
 		}
         .navbar {
             padding: 3vh 25vw 0 25vw;
+        }
+        .description {
+            width: 50vw;
         }
 	}
 </style>
