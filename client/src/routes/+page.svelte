@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fly } from 'svelte/transition';
+	import { fly, fade } from 'svelte/transition';
 
 	const navbarLinks: string[] = ['about', 'login'];
-	const phrases: string[] = ['ideas.', 'community.', 'us.'];
+	const phrases: string[] = ['create ideas.', 'create community.', 'create us.'];
 	let i = -1;
 
 	// @ts-ignore
@@ -23,7 +23,10 @@
 		circle2.style.top = `${circle2Top}%`;
 	}
 
+	let isLoaded: boolean = false;
+
 	onMount(() => {
+		setTimeout(() => (isLoaded = true), 500);
 		const interval: NodeJS.Timeout = setInterval(() => {
 			i += 1;
 			i %= phrases.length;
@@ -44,20 +47,17 @@
 		circle1.style.top = `${circle1Top}%`;
 		circle2.style.top = `${circle2Top}%`;
 	}}
-	on:resize={() => {
-		height = window.innerHeight;
-	}}
 />
 <div class="navbar">
-    <ul>
-        {#each navbarLinks as navbarLink}
-            <li><a class="nav-link" href={`/${navbarLink}`}>{navbarLink}</a></li>
-        {/each}
-    </ul>
+	<ul>
+		{#each navbarLinks as navbarLink}
+			<li><a class="nav-link" href={`/${navbarLink}`}>{navbarLink}</a></li>
+		{/each}
+	</ul>
 </div>
 <main>
-	<div id="content-container">
-		<div id="home-screen-container">
+	{#if isLoaded}
+		<div id="home-screen-container" in:fade={{ duration: 500 }}>
 			<div class="title-container">
 				<h1>tweetbook</h1>
 				<div class="phrase-container">
@@ -71,13 +71,21 @@
 
 			<a id="login-button" href="/login">let's begin.</a>
 		</div>
+    {:else}
+        <div id="home-screen-container" style="opacity: 0" />
+	{/if}
 
-		<canvas bind:this={circle1} id="circle1" style="scale: {Math.min(y * 0.1 + 1, 3.5)}" />
-		<canvas bind:this={circle2} id="circle2" style="scale: {Math.min(y * 0.15 + 1, 3.5)}" />
 
-		<div class="description">
-			<h1>Our mission is to engage the world.</h1>
-		</div>
+	<canvas bind:this={circle1} id="circle1" style="scale: {Math.min(y * 0.1 + 1, 3.5)}" />
+	<canvas bind:this={circle2} id="circle2" style="scale: {Math.min(y * 0.15 + 1, 3.5)}" />
+
+	<div class="description">
+		<h1>our mission is to engage the world.</h1>
+        <p>
+            we connect people together and
+            facilitate meaningful ideas - 
+            all to create a more colorful world
+        </p>
 	</div>
 </main>
 
@@ -85,7 +93,7 @@
 	.navbar {
 		position: fixed;
 		height: 20%;
-        width: 100vw;
+		width: 100vw;
 		z-index: 2;
 	}
 	.navbar > ul {
@@ -135,15 +143,6 @@
 		cursor: default;
 	}
 
-	@keyframes fade-in {
-		0% {
-			opacity: 0;
-		}
-		100% {
-			opacity: 1;
-		}
-	}
-
 	#home-screen-container {
 		min-height: 400px;
 		height: 100vh;
@@ -171,6 +170,7 @@
 	}
 	.phrase-container > h2 {
 		position: absolute;
+        font-size: 15px;
 	}
 
 	#login-button {
@@ -208,9 +208,14 @@
 
 	.description {
 		position: relative;
-        padding-top: calc(max(10vh,100px));
-        width: 80vw;
+		padding-top: calc(max(10vh, 100px));
+		width: 80vw;
 	}
+
+    .description > p {
+        font-size: 17px;
+        font-weight: 200;
+    }
 
 	/* Extra small device media query */
 	@media only screen and (max-width: 600px) {
@@ -225,6 +230,7 @@
 			padding: 20px;
 			margin: 10% 0 10% 0;
 		}
+
 	}
 
 	/* Small device portrait */
@@ -240,6 +246,11 @@
 		.phrase-container {
 			height: 75px;
 		}
+
+        .phrase-container > h2 {
+            font-size: 20px;
+        }
+
 		#login-button {
 			padding: 25px;
 			margin: 10% 0 10% 0;
@@ -259,6 +270,14 @@
 		.phrase-container {
 			height: 100px;
 		}
+
+        .phrase-container > h2 {
+            font-size: 30px;
+        }
+
+        .description > p {
+            font-size: 20px;
+        }
 	}
 
 	/* Large device media query */
@@ -275,38 +294,51 @@
 			height: 100px;
 		}
 
+        .phrase-container > h2 {
+            font-size: 35px;
+        }
+
 		#login-button {
 			font-size: 1.5rem;
 		}
 
-        .nav-link {
-            font-size: 25px;
-            margin: 0 20px 0 20px;
-        }
+		.nav-link {
+			font-size: 25px;
+			margin: 0 20px 0 20px;
+		}
+        
 	}
-    
+
 	/* Extra large devices */
 	@media only screen and (min-width: 1200px) {
-        main h1 {
-            font-size: 5rem;
+		main h1 {
+			font-size: 5rem;
 		}
 		main h2 {
 			font-size: 3rem;
 		}
-        
+
+        .phrase-container > h2 {
+            font-size: 40px;
+        }
+
 		.phrase-container {
-            height: 100px;
+			height: 100px;
 		}
 		#login-button {
-            margin: 50px 0 50px 0;
+			margin: 50px 0 50px 0;
 			padding: 30px;
 			font-size: 1.5rem;
 		}
-        .navbar {
-            padding: 3vh 25vw 0 25vw;
-        }
-        .description {
-            width: 50vw;
+		.navbar {
+			padding: 3vh 25vw 0 25vw;
+		}
+		.description {
+			width: 50vw;
+		}
+
+        .description > p {
+            font-size: 24px;
         }
 	}
 </style>
