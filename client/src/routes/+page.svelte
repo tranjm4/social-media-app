@@ -12,6 +12,7 @@
 	let circle1: HTMLCanvasElement;
 	let circle2: HTMLCanvasElement;
 
+    // Declarations to update circle top position based on scroll position
 	$: circle1Top = Math.max(80 - y * height * 0.005, 0);
 	$: circle2Top = Math.max(70 - y * height * 0.01, 20);
 
@@ -198,12 +199,14 @@
 		background-color: var(--primary-color);
 		top: 80%;
 		left: -20%;
+        opacity: 50%;
 	}
 
 	#circle2 {
 		background-color: var(--secondary-color);
 		top: 70%;
 		left: 30%;
+        opacity: 70%;
 	}
 
 	.description {
