@@ -42,8 +42,8 @@
 				</div>
 
                 <div class="external-links">
-                    <a href="/register">Create an account</a>
-                    <a href="/login/recover">Forgot password?</a>
+                    <a href="/userAuth/register">Create an account</a>
+                    <a href="/userAuth/login/recover">Forgot password?</a>
                 </div>
 
 				<input
