@@ -2,7 +2,19 @@
 	import { onMount } from 'svelte';
 	import { fly, fade } from 'svelte/transition';
 
-	const navbarLinks: string[] = ['about', 'login'];
+	interface Link {
+		href: string;
+		name: string;
+	}
+
+	class Link {
+		constructor(href: string, name: string) {
+			this.href = href;
+			this.name = name;
+		}
+	}
+
+	const navbarLinks: Link[] = [new Link("/about", "about"), new Link("/userAuth/login", "login")];
 	const phrases: string[] = ['create ideas.', 'create community.', 'create us.'];
 	let i = -1;
 
@@ -52,7 +64,7 @@
 <div class="navbar">
 	<ul>
 		{#each navbarLinks as navbarLink}
-			<li><a class="nav-link" href={`/${navbarLink}`}>{navbarLink}</a></li>
+			<li><a class="nav-link" href={navbarLink.href}>{navbarLink.name}</a></li>
 		{/each}
 	</ul>
 </div>
@@ -70,15 +82,19 @@
 				</div>
 			</div>
 
-			<a id="login-button" href="/login">let's begin.</a>
+			<a id="login-button" href="/userAuth/login">let's begin.</a>
 		</div>
     {:else}
         <div id="home-screen-container" style="opacity: 0" />
 	{/if}
 
-
-	<canvas bind:this={circle1} id="circle1" style="scale: {Math.min(y * 0.1 + 1, 3.5)}" />
-	<canvas bind:this={circle2} id="circle2" style="scale: {Math.min(y * 0.15 + 1, 3.5)}" />
+	{#if isLoaded}
+		<canvas bind:this={circle1} id="circle1" style="scale: {Math.min(y * 0.1 + 1, 3.5)}" in:fade={{ delay: 0, duration: 300 }} />
+		<canvas bind:this={circle2} id="circle2" style="scale: {Math.min(y * 0.15 + 1, 3.5)}" in:fade={{ delay: 200, duration: 700 }} />
+	{:else}
+		<canvas id="circle1" style="opacity: 0" />
+		<canvas id="circle2" style="opacity: 0" />
+	{/if}
 
 	<div class="description">
 		<h1>our mission is to engage the world.</h1>
@@ -93,7 +109,10 @@
 <style>
 	.navbar {
 		position: fixed;
-		height: 20%;
+		height: 10vh;
+		padding-left: 15%;
+		display: flex;
+		align-items: center;
 		width: 100vw;
 		z-index: 2;
 	}
@@ -333,9 +352,7 @@
 			padding: 30px;
 			font-size: 1.5rem;
 		}
-		.navbar {
-			padding: 3vh 25vw 0 25vw;
-		}
+
 		.description {
 			width: 50vw;
 		}
