@@ -2,6 +2,10 @@
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
+	const baseUrl = "http://localhost:3000/login";
+
+	
+
 	let isLoaded = false;
 
 	let username: string;
@@ -18,10 +22,22 @@
 	});
 
     async function handleSubmit() {
-        console.log(username, password);
         // TODO:
         // hash password
         // make GET request to authenticate
+		const queryParams = new URLSearchParams({
+			username: username,
+			password: password,
+		});
+
+		const url = `${baseUrl}?${queryParams.toString()}`
+
+		const response = await fetch(url).then(response => {
+			return response.json();
+		}).then(jsonData => {
+			console.log(jsonData);
+			return jsonData;
+		});
     }
 </script>
 
